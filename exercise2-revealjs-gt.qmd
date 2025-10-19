@@ -1,0 +1,509 @@
+---
+title: "Exercise 2: Elegant Tables with gt::gt()"
+subtitle: "Reveal.js Presentation Practice"
+author: "Your Name"
+format: 
+  revealjs:
+    theme: sky
+    slide-number: true
+    preview-links: auto
+    transition: fade
+    embed-resources: true
+---
+
+## Contents 📋 {.smaller}
+
+::: {.incremental}
+- Introduction to the `gt` package
+- Basic table creation and formatting
+- Styling and theming tables
+- Adding summaries and spanners
+- Conditional formatting with colours
+- Advanced features: icons, images, and sparklines
+- Multi-column layouts with tables
+- Best practices for presentation tables
+:::
+
+# Introduction
+
+## What is gt? 🎨 {auto-animate="true"}
+
+::: {.columns}
+::: {.column width="50%"}
+The **gt** package creates beautiful, publication-quality tables for HTML output.
+
+::: {.incremental}
+- Grammar of Tables philosophy
+- Rich formatting options
+- Perfect for Reveal.js presentations
+- Interactive and responsive
+:::
+:::
+
+::: {.column width="50%"}
+
+::: {.callout-tip appearance="simple"}
+## Installation
+```{r}
+#| echo: true
+#| eval: false
+
+install.packages("gt")
+```
+
+:::
+
+::: {.fragment}
+```{r}
+#| echo: true
+#| eval: false
+
+library(gt)
+library(dplyr)
+library(palmerpenguins)
+```
+
+:::
+:::
+:::
+
+## Dataset 🐧 {auto-animate="true"}
+
+We'll use the `palmerpenguins` dataset:
+
+```{r}
+#| echo: true
+#| eval: true
+
+# Load the data
+data(penguins, package = "palmerpenguins")
+
+# Preview
+head(penguins, 3)
+```
+
+. . .
+
+::: {.callout-note}
+The dataset contains measurements for 344 penguins across 3 species from islands in Antarctica.
+:::
+
+# Basic Tables {background-color="#2a1e5c"}
+
+## Task 1: Your First gt Table {.smaller}
+
+Create a basic table showing penguin species and their average body mass.
+
+::: {.incremental}
+**Steps**:
+
+1. Group penguins by `species`
+2. Calculate mean `body_mass_g`
+3. Create a `gt()` table
+4. Add a title: "Average Penguin Body Mass"
+4. Add a subtitle with data source
+:::
+
+. . .
+
+::: {.callout-important appearance="minimal"}
+**Hint**: Start with `dplyr` operations, then pipe into `gt()`
+:::
+
+---
+
+### Task 1: Code Template
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|1-2|3|4-5"
+
+penguins |>
+  group_by(___) |>
+  summarise(avg_mass = ___) |>
+  gt() |>
+  tab_header(title = ___)
+```
+
+## Task 2: Formatted Numbers {auto-animate="true"}
+
+Enhance your table from Task 1:
+
+::: columns
+::: {.column width="50%"}
+**Requirements**:
+
+::: {.incremental}
+- Format body mass to 1 decimal places
+- Add "kg" suffix to `avg_mass`
+- Rename columns appropriately
+:::
+:::
+
+::: {.column width="50%"}
+::: {.fragment}
+**Functions to use**:
+
+::: {.incremental}
+- `fmt_number()`
+- `cols_label()`
+- `tab_header()`
+:::
+:::
+:::
+:::
+
+# Styling Tables {background-color="#1a472a"}
+
+## Task 3: Apply Themes 🎨 {.scrollable}
+
+Create a summary table of penguin measurements by species and apply different themes.
+
+:::: {.panel-tabset}
+
+### Instructions
+
+::: {.incremental}
+1. Calculate mean flipper length and bill length by species
+2. Create a gt table
+3. Apply the `gt::opt_stylize()` function
+4. Try different style numbers (1-6)
+5. Add appropriate column labels
+:::
+
+### Hint
+
+```{r}
+#| echo: true
+#| eval: false
+
+penguins |>
+  group_by(species) |>
+  summarise(
+    avg_flipper = mean(flipper_length_mm, na.rm = TRUE),
+    avg_bill = mean(bill_length_mm, na.rm = TRUE)
+  ) |>
+  gt() |>
+  opt_stylize(style = ___, color = "gray")
+```
+
+::::
+
+## Task 4: Custom Colours 🌈 {.smaller auto-animate="true"}
+
+Add custom styling to highlight different species:
+
+**Your mission**:
+
+::: {.incremental}
+- Create a table with species counts
+- Use `tab_style()` to colour rows
+
+  - Adelie → light blue
+  - Chinstrap → light purple  
+  - Gentoo → light green
+- Make species names bold
+:::
+
+::: {.callout-tip .fragment}
+Use `cell_fill()` and `cell_text()` within `tab_style()`.
+:::
+
+# Advanced Formatting {background-color="#5c2a1e"}
+
+## Task 5: Summary Rows {.smaller}
+
+Create a table showing penguin measurements by island with summary statistics.
+
+**Requirements**:
+
+::: {.incremental}
+- Show bill length and body mass by island
+- Add a summary row showing overall means
+- Format numbers appropriately
+- Use `summary_rows()` or `grand_summary_rows()`
+:::
+
+. . .
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "1-5|6|7-11"
+
+penguins |>
+  group_by(island) |>
+  summarise(
+    bill = mean(bill_length_mm, na.rm = TRUE),
+    mass = mean(body_mass_g, na.rm = TRUE)
+  ) |>
+  gt() |>
+  grand_summary_rows(
+    columns = c(bill, mass),
+    fns = list(Average = ~ mean(.)),
+    fmt = ~ fmt_number(., decimals = 1)
+  )
+```
+
+## Task 6: Column Spanners 📊 {.smaller auto-animate="true"}
+
+Organise your table with grouped column headers.
+
+:::: {.columns}
+::: {.column width="50%"}
+Create a table showing:
+
+- Species
+- Bill measurements (length & depth)
+- Body measurements (mass & flipper)
+
+Group related columns under spanners:
+
+- "Bill Dimensions"
+- "Body Metrics"
+:::
+
+::: {.column width="50%"}
+::: {.fragment}
+**Use**:
+
+```{r}
+#| echo: true
+#| eval: false
+
+gt_table |>
+  tab_spanner(
+    label = "Bill Dimensions",
+    columns = c(bill_length, bill_depth)
+  ) |>
+  tab_spanner(
+    label = "Body Metrics",
+    columns = c(body_mass, flipper)
+  )
+```
+:::
+:::
+::::
+
+# Conditional Formatting {background-color="#2a3e5c"}
+
+## Task 7: Data Bars 📊 {.smaller transition="slide"}
+
+Add visual elements to show relative values:
+
+::: {.incremental}
+1. Create a table with species and body mass
+2. Add a data bar column using `fmt_number()` or custom formatting
+3. Colour bars based on value ranges
+4. Add appropriate palette
+:::
+
+. . .
+
+::: {.callout-note appearance="minimal"}
+**Hint**: Use `data_color()` to create colour scales
+:::
+
+---
+
+### Task 7: Starter Code
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "|6-10"
+
+penguins |>
+  group_by(species) |>
+  summarise(avg_mass = mean(body_mass_g, na.rm = TRUE)) |>
+  gt() |>
+  fmt_number(columns = avg_mass, decimals = 0) |>
+  data_color(
+    columns = avg_mass,
+    palette = "viridis",
+    domain = c(3000, 6000)
+  )
+```
+
+## Task 8: Conditional Icons ✨ {.smaller auto-animate="true"}
+
+Add icons or symbols based on data values:
+
+**Challenge**:
+
+::: {.incremental}
+- Calculate male vs female penguin counts by species
+- Add icons or emojis to represent sex
+- Use conditional formatting for counts
+- Make it visually appealing
+:::
+
+::: {.callout-tip .fragment}
+Consider using `text_transform()` to add custom HTML/icons.
+:::
+
+# Multi-Column Layouts {background-color="#1e3a5c"}
+
+## Task 9: Side-by-Side Tables 📱 {.smaller}
+
+Create two tables in a multi-column layout:
+
+:::: {.columns}
+::: {.column width="50%"}
+### Adelie Penguins
+
+Display summary statistics for Adelie species only
+:::
+
+::: {.column width="50%"}
+### Other Species  
+
+Display summary statistics for Chinstrap and Gentoo
+:::
+::::
+
+. . .
+
+**Requirements**:
+
+- Use appropriate formatting
+- Apply consistent styling
+- Add titles to each table
+
+# Advanced Features {background-color="#5c1e4a"}
+
+## Task 10: Complete Dashboard Table 🎯 {.scrollable}
+
+::: {.callout-important appearance="default"}
+## Final Challenge
+
+Create a comprehensive table that includes:
+
+::: {.incremental}
+- Multiple column spanners
+- Summary rows
+- Conditional colour formatting
+- Formatted numbers with units
+- Custom column labels
+- A subtitle with data source
+- Footnotes explaining any assumptions
+:::
+:::
+
+---
+
+### Task 10: Design Specification
+
+Your table should show penguin data by species including:
+
+1. **Identification**: Species name
+2. **Physical Measurements**: Bill length/depth, flipper length
+3. **Body Metrics**: Body mass, sample size
+4. Use colour scales for body mass
+5. Add grand summary row
+6. Include data source as footnote
+
+# Best Practices {background-color="#2a2a2a"}
+
+## Table Design Principles 🎨
+
+:::: {.columns}
+::: {.column width="50%"}
+### Do ✅
+
+::: {.incremental}
+- Keep it simple and clean
+- Use consistent formatting
+- Highlight key information
+- Choose appropriate precision
+- Add context with titles/notes
+:::
+:::
+
+::: {.column width="50%"}
+### Avoid ❌
+
+::: {.incremental}
+- Too many colours
+- Cluttered layouts
+- Inconsistent styling  
+- Missing units
+- Unexplained abbreviations
+:::
+:::
+::::
+
+## Performance Tips ⚡ {.smaller}
+
+::: {.callout-tip appearance="default"}
+## Optimising gt Tables in Presentations
+
+- Limit rows for slide visibility (5-10 max)
+- Use `.smaller` class for larger tables
+- Pre-process data before creating tables
+- Cache expensive computations
+- Test rendering time
+:::
+
+. . .
+
+::: {.callout-note appearance="simple"}
+Remember: Tables in presentations should support your narrative, not overwhelm your audience!
+:::
+
+# Wrap Up {background-color="#1a1a2e"}
+
+## Summary 📝 {auto-animate="true"}
+
+Today you learnt to:
+
+::: {.incremental}
+✅ Create beautiful tables with `gt()`
+
+✅ Apply styling and themes
+
+✅ Format numbers and add visual elements
+
+✅ Use conditional formatting effectively
+
+✅ Organise complex data with spanners and summaries
+
+✅ Integrate tables into Reveal.js presentations
+
+✅ Follow best practices for presentation tables
+:::
+
+## Resources 📚 {transition="zoom"}
+
+::: {.columns}
+::: {.column width="50%"}
+**Documentation**:
+
+- [gt package website](https://gt.rstudio.com/)
+- [Quarto Reveal.js Guide](https://quarto.org/docs/presentations/revealjs/)
+:::
+
+::: {.column width="50%"}
+**Examples**:
+
+- [R Graph Gallery - Tables](https://r-graph-gallery.com/table.html)
+:::
+:::
+
+. . .
+
+::: {.callout-tip appearance="simple"}
+## Keep Practising! 
+The best way to master `gt` is through experimentation. Try different combinations and styles! 🚀
+:::
+
+## Thank You! 🙏 {.center}
+
+::: {.columns}
+::: {.column width="100%"}
+<div style="text-align: center; font-size: 2em; margin-top: 100px;">
+Happy table making! 📊✨
+</div>
+:::
+:::

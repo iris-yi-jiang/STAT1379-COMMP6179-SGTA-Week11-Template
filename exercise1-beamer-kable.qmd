@@ -1,0 +1,259 @@
+---
+title: "Exercise 1: Beautiful Tables with knitr::kable()"
+subtitle: "Beamer Presentation Practice"
+author: "Your Name"
+format: 
+  beamer:
+    theme: Rochester
+    colortheme: dolphin
+---
+
+# Introduction
+
+## Exercise Overview 
+
+In this exercise, you will:
+
+::: {.incremental}
+- Create a professional Beamer presentation
+- Format tables using `knitr::kable()` and `kableExtra`
+- Apply incremental reveals and pauses
+- Use multiple column layouts
+- Add callout blocks and formatting
+:::
+
+## Dataset 
+
+We'll use the `mtcars` dataset to demonstrate various table formatting techniques.
+
+. . .
+
+**Task**: Load the necessary packages and prepare the data.
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Load required packages
+library(knitr)
+library(kableExtra)
+library(dplyr)
+
+# Preview the data
+head(mtcars)
+```
+
+# Basic Tables
+
+## Task 1: Simple Table 
+
+Create a basic table showing the first 6 rows of `mtcars` with only these columns: `mpg`, `cyl`, `disp`, `hp`.
+
+::: {.incremental}
+- Use `knitr::kable()` to create the table
+- Add a caption: "Motor Trend Car Road Tests"
+- Set digits to 1 for decimal places
+:::
+
+. . .
+
+```{r}
+#| echo: true
+#| eval: false
+
+# Your code here
+```
+
+## Task 2: Formatted Column Names 
+
+Improve the table from Task 1 by:
+
+:::: {.columns}
+::: {.column width="50%"}
+- Renaming columns to be more descriptive
+- Aligning columns appropriately
+- Adding horizontal lines
+:::
+
+::: {.column width="50%"}
+**Hint**: Use `col.names` argument in `kable()`
+
+Column suggestions:
+- Miles/gallon
+- Cylinders  
+- Displacement
+- Horsepower
+:::
+::::
+
+### Question{.alert}
+
+Does your table overflow the slide width? If so, how can you fix it?
+
+# Advanced Formatting
+
+## Task 3: Grouped Data Summary
+
+Create a summary table that shows:
+
+::: {.incremental}
+1. Average `mpg` by number of cylinders (`cyl`)
+2. Count of cars in each group
+3. Standard deviation of `mpg`
+:::
+
+. . .
+
+**Requirements**:
+
+- Use `dplyr` for data manipulation
+- Format the table with `kableExtra::kable_styling()`
+- Add appropriate column names
+
+## Task 4: Conditional Formatting
+
+Create a table with conditional formatting:
+
+:::: {.columns align=center}
+::: {.column width="60%"}
+**Instructions**:
+
+- Show cars with `mpg`, `hp`, and `wt`
+- Highlight rows where `mpg > 25` 
+- Use different colours for high vs. low horsepower
+- Add a footnote explaining the highlighting
+:::
+
+::: {.column width="40%"}
+```{r}
+#| echo: false
+#| eval: true
+
+# Use kableExtra functions:
+# - row_spec()
+# - footnote()
+# change cell execution option after code edits
+```
+:::
+::::
+
+# Multi-Column Layouts
+
+## Task 5: Side-by-Side Comparison
+
+Create two tables side by side:
+
+:::: {.columns .onlytextwidth}
+::: {.column width="48%"}
+### Automatic Transmission
+
+Show summary statistics for automatic cars (`am == 0`)
+:::
+
+::: {.column width="4%"}
+:::
+
+::: {.column width="48%"}
+### Manual Transmission
+
+Show summary statistics for manual cars (`am == 1`)
+:::
+::::
+
+. . .
+
+**Hint**: Create two separate tables and use column layout
+
+# Challenge Tasks
+
+## Task 6: Complex Table Styling 
+
+Create a comprehensive table that includes:
+
+::: {.incremental}
+- Grouped headers (use `add_header_above()`)
+- Striped rows for better readability
+- Bordered cells
+- Custom font size
+:::
+
+## Task 7: Top Performers Table
+
+Create a table showcasing the top 5 most fuel-efficient cars:
+
+:::: {.columns}
+::: {.column width="50%"}
+**Requirements**:
+
+1. Select relevant columns
+2. Sort by `mpg` (descending)
+3. Add row numbers
+4. Highlight the #1 car using bold text and red color
+5. Use `kable_paper` theme
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+#| eval: false
+
+# Start with:
+mtcars |>
+  arrange(desc(mpg)) |>
+  head(5)
+# change cell execution option after code edits
+```
+
+:::
+::::
+
+# Bonus Challenge
+
+## Task 8: Incremental Table 
+
+Create a table that reveals information incrementally:
+
+::: {.incremental}
+- Start with car names and `mpg`
+- Add performance metrics (`hp`, `qsec`)
+- Add weight and efficiency metrics
+- Finally, add a summary row
+:::
+
+. . .
+
+**Hint**: You may need to create multiple versions of the table or use pauses strategically.
+
+# Wrap Up
+
+## Summary 
+
+Today you practised:
+
+::: {.nonincremental}
+- Basic table creation with `knitr::kable()`
+- Advanced formatting with `kableExtra`
+- Conditional formatting and styling
+- Multi-column table layouts
+- Integrating tables into Beamer presentations
+:::
+
+## Tips for Success 
+
+:::: {.columns align=top}
+::: {.column width="50%"}
+### Do's {.example}
+- Keep tables simple and readable
+- Use appropriate decimal places
+- Add meaningful captions
+- Align numbers consistently
+:::
+
+::: {.column width="50%"}
+### Don'ts {.alert}
+- Avoid cluttered tables
+- Don't use too many colours
+- Avoid tiny font sizes
+- Don't overuse borders
+:::
+::::
