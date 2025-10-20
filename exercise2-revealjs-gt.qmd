@@ -136,7 +136,7 @@ Enhance your table from Task 1:
 
 ::: {.incremental}
 - Format body mass to 1 decimal places
-- Add "kg" suffix to `avg_mass`
+- Add "g" suffix to `avg_mass`
 - Rename columns appropriately
 :::
 :::
@@ -152,6 +152,23 @@ Enhance your table from Task 1:
 :::
 :::
 :::
+:::
+
+## Note on Adding Suffix in 'gt()' {.smaller}
+
+- The `suffixing` argument in `fmt_number()` allows you to append units after numbers.
+
+- However, be cautious when using suffixes. 
+
+::: {.callout-caution .fragment}
+## large-number suffixing
+When you use `fmt_integer()` in `gt`, you can ask it to automatically scale large numbers (like thousands or millions) and append the right suffix such as:
+
+  - K → thousands
+  - M → millions
+  - B → billions
+
+In our case, If we use the `suffixing = " g"` argument for adding "g" suffix to `avg_mass`, it will **autoscale large numbers** and then add the " g" suffix, which is not what we want for body mass in grams.
 :::
 
 # Styling Tables {background-color="#1a472a"}
